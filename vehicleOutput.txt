@@ -1,0 +1,86 @@
+Vehicle dataset
+
+I23452,Abarth,Italy,Fiat S.p.A,abarth.it,
+A33433,Acura,Japan,Honda,acura.com,
+U24333,arash,U.K,Arash Motor,arashcars.com,
+I45455,AlfaRomeo,Italy,Fiat S.p.A,alfaromeo.com,
+G34343,Audi,Germany,Volkswagen,audi.com,
+G34344,BMW,Germany,BMW Group,bmw.com,
+C34343,Chery,China,State-owned,cheyinternational.com,
+U45545,Chevrolet,USA,General Motors,chevrolet.com,
+I45454,Ferrari,Italy,Fiat S.p.A,ferrari.com,
+I45454,Fiat,Italy,Fiat S.p.A,fiat.com,
+U45454,Ford,USA,Ford Motor Company,frod.com,
+J34343,Honda,Japan,Honda Motor Company,honda.com,
+K34343,Hyundai,South Korea,Hyundai Motor Company,worldwide.hyunda.com,
+J45455,Isuzu,japan,Isuzu Motors Limited,isuzu.co.jp/world,
+U23232,Jagur,UK,Jagur Land Rover Automative PLC,jagur.com,
+U34343,Jeep,USA,Chrysler Group LLC,jeep.com,
+A34343,Joss,Australia,Joss Developments Limited,joss.com.au,
+I45454,Mahindra,India,Mahindra group,mahindra.com,
+I33434,MaruthiSuzuki,India,Suzuki,maruthisuzuki.com,
+G34365,Merchedes-Benz,Germany,Daimler AG,mercedes-benz.com,
+G53434,Volkswagen,Germany,Volkswagen Group,volkswagen.com
+
+Assignment 16/1
+
+UPDATE cars set vname = 'aus' where headquaters = 'Australia';
+hive> select * from cars;
+----
+A34343	aus	Australia	Joss Developments Limited	joss.com.au
+Time taken: 0.493 seconds, Fetched: 21 row(s)
+----
+
+DELETE from cars where headquaters = 'Japan';
+hive> select * from cars;
+OK
+I23452	Abarth	Italy	Fiat S.p.A	abarth.it
+U24333	arash	U.K	Arash Motor	arashcars.com
+I45455	AlfaRomeo	Italy	Fiat S.p.A	alfaromeo.com
+G34343	Audi	Germany	Volkswagen	audi.com
+G34344	BMW	Germany	BMW Group	bmw.com
+C34343	Chery	China	State-owned	cheyinternational.com
+U45545	Chevrolet	USA	General Motors	chevrolet.com
+I45454	Ferrari	Italy	Fiat S.p.A	ferrari.com
+I45454	Fiat	Italy	Fiat S.p.A	fiat.com
+U45454	Ford	USA	Ford Motor Company	frod.com
+K34343	Hyundai	South Korea	Hyundai Motor Company	worldwide.hyunda.com
+J45455	Isuzu	japan	Isuzu Motors Limited	isuzu.co.jp/world
+U23232	Jagur	UK	Jagur Land Rover Automative PLC	jagur.com
+U34343	Jeep	USA	Chrysler Group LLC	jeep.com
+A34343	aus	Australia	Joss Developments Limited	joss.com.au
+I45454	Mahindra	India	Mahindra group	mahindra.com
+I33434	MaruthiSuzuki	India	Suzuki	maruthisuzuki.com
+G34365	Merchedes-Benz	Germany	Daimler AG	mercedes-benz.com
+G53434	Volkswagen	Germany	Volkswagen Group	volkswagen.com
+Time taken: 0.122 seconds, Fetched: 19 row(s)
+
+
+Assignment 16/2
+hive> select count(*) from vehicle where headquaters = 'India';
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 3.88 sec   HDFS Read: 8488 HDFS Write: 2 SUCCESS
+Total MapReduce CPU Time Spent: 3 seconds 880 msec
+OK
+2
+Time taken: 40.225 seconds, Fetched: 1 row(s)
+
+>create index vidx on table vehicle(headquaters) AS 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler' with deferred rebuild;
+
+>show formatted index on vehicle;
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 3.72 sec   HDFS Read: 8493 HDFS Write: 2 SUCCESS
+Total MapReduce CPU Time Spent: 3 seconds 720 msec
+OK
+2
+Time taken: 34.645 seconds, Fetched: 1 row(s)
+
+>create index vidx_bitmap on table vehicle(headquaters) AS 'BITMAP' with deferred rebuild;
+>ALTER INDEX vidx_bitmap on vehicle REBUILD;
+
+MapReduce Jobs Launched: 
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 3.84 sec   HDFS Read: 8493 HDFS Write: 2 SUCCESS
+Total MapReduce CPU Time Spent: 3 seconds 840 msec
+OK
+2
+Time taken: 35.616 seconds, Fetched: 1 row(s)
