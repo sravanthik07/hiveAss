@@ -1,0 +1,2 @@
+git remote add origin https://github.com/sravanthik07/hiveAss.git
+git push -u origin master
